@@ -11,6 +11,7 @@ import { Font } from 'astro:assets';
 import Seo from '@/components/seo/Seo.astro';
 import Header from '@/components/layout/Header.astro';
 import Footer from '@/components/layout/Footer.astro';
+import KeymapHelp from '@/components/kit/KeymapHelp.astro';
 import { LOCALE_META, resolveLocale, useTranslations } from '@/i18n';
 import '@/styles/global.css';
 
@@ -102,15 +103,31 @@ const t = useTranslations(locale);
 
 		{chrome && <Header />}
 
-		<main id="main">
+		{/*
+		 * `tabindex="-1"` is what makes the skip link work in Safari and WebKit,
+		 * which scroll to the target but leave focus behind without it. The
+		 * outline is suppressed because focus arrives programmatically here — the
+		 * user did not Tab to the `<main>` element itself.
+		 */}
+		<main id="main" tabindex="-1" class="focus:outline-none">
 			<slot />
 		</main>
 
 		{chrome && <Footer />}
 
+		{/*
+		 * One polite live region for the whole document — see `scripts/announce.ts`.
+		 * It must be in the DOM from first paint: a region inserted at the moment
+		 * it has something to say is not yet observed, and the message is lost.
+		 */}
+		<div data-live-region role="status" aria-live="polite" aria-atomic="true" class="sr-only"></div>
+
+		<KeymapHelp />
+
 		<script>
 			import '@/scripts/reveal';
 			import '@/scripts/analytics';
+			import '@/scripts/vim';
 		</script>
 	</body>
 </html>

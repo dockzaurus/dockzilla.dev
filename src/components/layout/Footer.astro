@@ -36,10 +36,11 @@ const columns = [
 				<p class="max-w-xs text-sm text-muted-foreground">{t.common.tagline}</p>
 				<a
 					href={SITE.repo}
+					data-goto="repo"
 					rel="noopener"
-					class="inline-flex items-center gap-2 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
+					class="inline-flex items-center gap-2 rounded-sm text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
 				>
-					<Icon name="lucide:github" class="size-4" />
+					<Icon name="lucide:github" class="size-4" aria-hidden="true" />
 					{t.common.github}
 				</a>
 			</div>
@@ -73,7 +74,26 @@ const columns = [
 			class="mt-10 flex flex-col gap-2 border-t border-border pt-6 text-sm text-muted-foreground sm:flex-row sm:items-center sm:justify-between"
 		>
 			<p>{t.footer.rights}</p>
-			<p>© {SITE.foundedYear} {SITE.name}</p>
+
+			<div class="flex items-center gap-4">
+				{/*
+				 * Unhidden by `scripts/vim.ts`. The shortcuts are scripted, so
+				 * advertising them before the script runs would promise nothing —
+				 * and this is also the pointer-only route to the sheet, which the
+				 * `?` binding alone would not give.
+				 */}
+				<button
+					type="button"
+					data-keymap-open
+					hidden
+					class="inline-flex items-center gap-2 rounded-sm font-medium transition-colors hover:text-foreground"
+				>
+					<Icon name="lucide:keyboard" class="size-4" aria-hidden="true" />
+					{t.keymap.trigger}
+					<kbd class="rounded-[4px] border border-border-strong px-1 font-mono text-xs">?</kbd>
+				</button>
+				<p>© {SITE.foundedYear} {SITE.name}</p>
+			</div>
 		</div>
 	</div>
 </footer>

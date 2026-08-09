@@ -1,3 +1,4 @@
+import type { BindingId, KeymapSectionId } from '@/data/keymap';
 import type { FeatureId, ProjectStatus } from '@/data/landing';
 
 /**
@@ -14,7 +15,11 @@ export const en = {
 		github: 'Star on GitHub',
 		skipToContent: 'Skip to content',
 		toggleTheme: 'Toggle colour theme',
+		themeLight: 'Light theme',
+		themeDark: 'Dark theme',
 		language: 'Language',
+		home: 'Home',
+		mainNav: 'Main',
 	},
 
 	status: {
@@ -51,6 +56,52 @@ export const en = {
 		body: 'The page you asked for is not here — it may have moved, or the link may be wrong. Your servers are fine.',
 		home: 'Back to home',
 		docs: 'Read the docs',
+	},
+
+	/**
+	 * The vim-style keyboard layer. `bindings` is keyed by the id union from
+	 * `src/data/keymap.ts`, so adding a shortcut without describing it here is a
+	 * build error. `announce` holds the live-region messages the engine speaks —
+	 * `{name}` in `section` is substituted with the heading it landed on.
+	 */
+	keymap: {
+		title: 'Keyboard shortcuts',
+		intro:
+			'Vim-style motions for moving around the site. They never fire while you are typing in a field, and you can switch them off below.',
+		trigger: 'Keyboard shortcuts',
+		close: 'Close',
+		toggle: 'Enable keyboard shortcuts',
+		sections: {
+			motion: 'Motion',
+			jump: 'Jump to',
+			action: 'Actions',
+		} satisfies Record<KeymapSectionId, string>,
+		bindings: {
+			scrollDown: 'Scroll down',
+			scrollUp: 'Scroll up',
+			halfPageDown: 'Half page down',
+			halfPageUp: 'Half page up',
+			goTop: 'Top of the page',
+			goBottom: 'Bottom of the page',
+			nextSection: 'Next section',
+			prevSection: 'Previous section',
+			followLink: 'Label every link in view, then type a label to follow it',
+			goHome: 'Home',
+			goFeatures: 'Features',
+			goDocs: 'Documentation',
+			goRepo: 'GitHub repository',
+			toggleTheme: 'Switch between light and dark',
+			showHelp: 'Show this list',
+		} satisfies Record<BindingId, string>,
+		announce: {
+			enabled: 'Keyboard shortcuts enabled.',
+			disabled: 'Keyboard shortcuts disabled.',
+			top: 'Top of the page.',
+			bottom: 'Bottom of the page.',
+			section: 'Section: {name}.',
+			hints: 'Links labelled. Type a label to follow it, or press Escape to cancel.',
+			hintsEmpty: 'No links in view.',
+		},
 	},
 
 	landing: {
