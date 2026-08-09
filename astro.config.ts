@@ -85,6 +85,8 @@ export default defineConfig({
 					'sun',
 					'moon',
 					'github',
+					'keyboard',
+					'x',
 				],
 			},
 		}),
