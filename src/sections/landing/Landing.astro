@@ -12,7 +12,7 @@ import { resolveLocale, useTranslations } from '@/i18n';
 const t = useTranslations(resolveLocale(Astro.currentLocale, Astro.url));
 ---
 
-<BaseLayout title={t.meta.title} description={t.meta.description}>
+<BaseLayout title={t.meta.title} description={t.meta.description} ogDescription={t.meta.ogDescription}>
 	<Hero />
 	<Features />
 	<FinalCta />

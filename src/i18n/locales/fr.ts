@@ -19,11 +19,13 @@ export const fr: Dictionary = {
 	},
 
 	meta: {
-		title: 'Dockzilla — Déploiements dignes de Vercel sur vos propres serveurs',
+		title: 'Dockzilla — Le PaaS auto-hébergé open source',
 		description:
-			'Dockzilla est une plateforme d\'auto-hébergement open source : déploiements pilotés par Git, bases en un clic, TLS automatique et journaux en direct sur le matériel que vous contrôlez.',
+			'Dockzilla est un PaaS auto-hébergé open source : déploiements pilotés par Git, bases de données en un clic, TLS automatique et logs en direct sur vos serveurs.',
 		ogDescription:
-			'Déploiements pilotés par Git, bases en un clic, TLS automatique et journaux en direct sur le matériel que vous contrôlez.',
+			'Git push, une URL. Le PaaS auto-hébergé open source : bases en un clic, TLS automatique et logs en direct, sur vos propres serveurs.',
+		imageAlt:
+			'Dockzilla — le PaaS auto-hébergé open source pour déployer par Git sur vos propres serveurs.',
 	},
 
 	nav: {
@@ -36,48 +38,50 @@ export const fr: Dictionary = {
 		titleLead: 'Déployez vos applications sur',
 		titleHighlight: 'vos propres serveurs',
 		subtitle:
-			'Dockzilla offre une expérience de déploiement digne de Vercel sur le matériel que vous contrôlez. Git push, une URL, et la facture reste chez vous.',
+			'Dockzilla est un PaaS auto-hébergé open source qui offre une expérience de déploiement digne de Vercel sur le matériel que vous possédez déjà. Git push, une URL, et la facture reste chez vous.',
 		ctaPrimary: 'Déployer votre première app',
 		ctaSecondary: 'Lire la documentation',
 
 		preview: {
-			label: 'Aperçu du produit',
+			label:
+				'Le tableau de bord Dockzilla : un graphique de trafic en direct à côté de trois projets déployés et de leur utilisation CPU.',
 			trafficTitle: 'Trafic',
 			requests: 'Requêtes',
 			errors: 'Erreurs',
 			cpu: 'CPU',
 		},
 
-		featuresTitle: 'Tout ce qu\'une équipe plateforme construit — déjà construit',
+		featuresTitle: 'Tout ce qu\'une plateforme d\'auto-hébergement exige — déjà construit',
 		features: {
 			git: {
-				title: 'Déploiements par Git',
-				body: 'Poussez une branche, obtenez une URL de preview. Bascule sans coupure.',
+				title: 'Déploiements pilotés par Git',
+				body: 'Poussez une branche, obtenez une URL de preview. Bascule des conteneurs sans coupure.',
 			},
 			db: {
-				title: 'Bases en un clic',
-				body: 'Postgres, MySQL, Redis et Mongo, sauvegardes planifiées incluses.',
+				title: 'Bases de données en un clic',
+				body: 'Postgres, MySQL, Redis et MongoDB auto-hébergés, sauvegardes planifiées incluses.',
 			},
 			domains: {
-				title: 'Domaines & TLS',
-				body: 'Certificats automatiques, wildcard et vérification DNS instantanée.',
+				title: 'Domaines & TLS automatique',
+				body: 'Certificats émis et renouvelés pour vous, wildcard et vérification DNS instantanée.',
 			},
 			logs: {
 				title: 'Logs & métriques en direct',
-				body: 'Streamez la sortie, tracez les requêtes, surveillez le CPU.',
+				body: 'Streamez la sortie, tracez les requêtes, surveillez le CPU — sans APM externe.',
 			},
 			templates: {
-				title: 'Marketplace de templates',
-				body: 'Plus de quatre-vingt-dix applications déployables en un clic.',
+				title: 'Templates auto-hébergeables',
+				body: 'Plus de quatre-vingt-dix applications déployables sur votre serveur en un clic.',
 			},
 			team: {
-				title: 'Équipes & rôles',
-				body: 'Permissions fines, journal d\'audit et SSO pour toute l\'équipe.',
+				title: 'Équipes, rôles & SSO',
+				body: 'Permissions fines, journal d\'audit et authentification unique pour toute l\'équipe.',
 			},
 		},
 
 		ctaTitle: 'Vos serveurs. Vos données. Vos règles.',
-		ctaBody: 'Lancez la console et migrez votre première charge en moins de dix minutes.',
+		ctaBody:
+			'Lancez-vous dans l\'auto-hébergement : ouvrez la console et migrez votre première charge en moins de dix minutes.',
 	},
 
 	footer: {

@@ -46,8 +46,11 @@ const columns = [
 
 			{
 				columns.map((column) => (
-					<div>
-						<h2 class="font-display text-xs font-bold uppercase tracking-widest text-foreground">{column.title}</h2>
+					/* Labelled `nav` rather than a heading: these are link groups, and
+					   promoting them to `h2` would put "Product"/"Resources" in the page's
+					   heading outline alongside the real section headings. */
+					<nav aria-label={column.title}>
+						<p class="font-display text-xs font-bold uppercase tracking-widest text-foreground">{column.title}</p>
 						<ul class="mt-3 space-y-2 text-sm text-muted-foreground">
 							{column.links.map((link) => (
 								<li>
@@ -61,7 +64,7 @@ const columns = [
 								</li>
 							))}
 						</ul>
-					</div>
+					</nav>
 				))
 			}
 		</div>
