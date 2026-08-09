@@ -1,0 +1,31 @@
+{
+  "name": "dockzilla-dev",
+  "type": "module",
+  "version": "0.0.1",
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro",
+    "check": "astro check",
+    "sync": "astro sync"
+  },
+  "dependencies": {
+    "@astrojs/sitemap": "^3.7.3",
+    "@iconify-json/lucide": "^1.2.122",
+    "@tailwindcss/vite": "^4.3.3",
+    "astro": "^7.2.0",
+    "astro-icon": "^1.1.5",
+    "motion": "^13.0.0",
+    "posthog-js": "^1.414.0",
+    "tailwindcss": "^4.3.3",
+    "zod": "^4.4.3"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.10",
+    "typescript": "^6.0.3"
+  }
+}

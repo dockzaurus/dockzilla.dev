@@ -1,0 +1,76 @@
+---
+import { Icon } from 'astro-icon/components';
+
+import Logo from '@/components/brand/Logo.astro';
+import { SITE } from '@/data/site';
+import { localizePath, resolveLocale, useTranslations } from '@/i18n';
+
+const locale = resolveLocale(Astro.currentLocale, Astro.url);
+const t = useTranslations(locale);
+const home = localizePath('/', locale);
+
+const columns = [
+	{
+		title: t.footer.sections.product,
+		links: [{ href: `${home}#features`, label: t.footer.links.features }],
+	},
+	{
+		title: t.footer.sections.resources,
+		links: [
+			{ href: SITE.docs, label: t.footer.links.docs, external: true },
+			{ href: localizePath('/blog', locale), label: t.footer.links.blog },
+		],
+	},
+	{
+		title: t.footer.sections.community,
+		links: [{ href: SITE.repo, label: t.footer.links.github, external: true }],
+	},
+];
+---
+
+<footer class="border-t-2 border-border-strong bg-sidebar">
+	<div class="mx-auto max-w-6xl px-4 py-12">
+		<div class="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
+			<div class="space-y-3">
+				<Logo />
+				<p class="max-w-xs text-sm text-muted-foreground">{t.common.tagline}</p>
+				<a
+					href={SITE.repo}
+					rel="noopener"
+					class="inline-flex items-center gap-2 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
+				>
+					<Icon name="lucide:github" class="size-4" />
+					{t.common.github}
+				</a>
+			</div>
+
+			{
+				columns.map((column) => (
+					<div>
+						<h2 class="font-display text-xs font-bold uppercase tracking-widest text-foreground">{column.title}</h2>
+						<ul class="mt-3 space-y-2 text-sm text-muted-foreground">
+							{column.links.map((link) => (
+								<li>
+									<a
+										href={link.href}
+										rel={'external' in link && link.external ? 'noopener' : undefined}
+										class="transition-colors hover:text-foreground"
+									>
+										{link.label}
+									</a>
+								</li>
+							))}
+						</ul>
+					</div>
+				))
+			}
+		</div>
+
+		<div
+			class="mt-10 flex flex-col gap-2 border-t border-border pt-6 text-sm text-muted-foreground sm:flex-row sm:items-center sm:justify-between"
+		>
+			<p>{t.footer.rights}</p>
+			<p>© {SITE.foundedYear} {SITE.name}</p>
+		</div>
+	</div>
+</footer>

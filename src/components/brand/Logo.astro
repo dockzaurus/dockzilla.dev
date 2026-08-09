@@ -1,0 +1,20 @@
+---
+import { SITE } from '@/data/site';
+
+interface Props {
+	/** Hide the wordmark, keeping only the mark. */
+	compact?: boolean;
+	class?: string;
+}
+
+const { compact = false, class: className } = Astro.props;
+---
+
+<span class:list={['group/logo inline-flex items-center gap-2', className]}>
+	<span
+		class="grid size-8 shrink-0 place-items-center rounded-md border-2 border-border-strong bg-primary transition-transform duration-300 ease-out group-hover/logo:rotate-90"
+	>
+		<span class="block size-3 rounded-[2px] bg-primary-foreground"></span>
+	</span>
+	{!compact && <span class="font-display text-lg font-bold tracking-tight">{SITE.name}</span>}
+</span>

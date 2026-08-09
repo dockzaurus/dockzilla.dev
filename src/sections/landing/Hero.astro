@@ -1,0 +1,60 @@
+---
+import { Icon } from 'astro-icon/components';
+
+import Button from '@/components/ui/Button.astro';
+import DashboardPreview from '@/sections/landing/DashboardPreview.astro';
+import { SITE } from '@/data/site';
+import { resolveLocale, useTranslations } from '@/i18n';
+
+const locale = resolveLocale(Astro.currentLocale, Astro.url);
+const t = useTranslations(locale);
+---
+
+<section class="relative overflow-hidden border-b-2 border-border-strong">
+	{/* Drifting glow, then the grid on top of it. Both are inset past the edges so
+	   neither reveals a seam as it moves. */}
+	<div class="hero-aurora absolute -inset-8" aria-hidden="true"></div>
+	<div class="grid-paper grid-drift absolute -inset-8 opacity-60" aria-hidden="true"></div>
+
+	<div class="relative mx-auto max-w-6xl px-4 py-16 sm:py-24">
+		<p
+			data-reveal
+			class="inline-flex items-center gap-2 rounded-full border-2 border-border-strong bg-card px-3 py-1 text-xs font-semibold shadow-[var(--shadow-brut-sm)]"
+		>
+			<span class="pulse-dot size-1.5 rounded-full bg-primary" aria-hidden="true"></span>
+			{t.landing.badge}
+		</p>
+
+		<h1
+			data-reveal
+			data-reveal-delay="80"
+			class="mt-6 max-w-3xl font-display text-4xl font-bold leading-[1.05] sm:text-6xl"
+		>
+			{t.landing.titleLead}{' '}
+			<span class="text-gradient">{t.landing.titleHighlight}</span>
+		</h1>
+
+		<p data-reveal data-reveal-delay="160" class="mt-5 max-w-xl text-base text-muted-foreground sm:text-lg">
+			{t.landing.subtitle}
+		</p>
+
+		<div data-reveal data-reveal-delay="240" class="mt-8 flex flex-wrap gap-3">
+			<Button href={SITE.app} size="lg" data-track="cta_clicked" data-track-location="hero">
+				{t.landing.ctaPrimary}
+				<Icon name="lucide:arrow-right" />
+			</Button>
+			<Button
+				href={SITE.docs}
+				size="lg"
+				variant="outline"
+				rel="noopener"
+				data-track="docs_opened"
+				data-track-location="hero"
+			>
+				{t.landing.ctaSecondary}
+			</Button>
+		</div>
+
+		<DashboardPreview />
+	</div>
+</section>

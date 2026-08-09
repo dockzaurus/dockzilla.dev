@@ -1,0 +1,19 @@
+---
+/**
+ * The landing page itself. Locale routes are thin wrappers around this so the
+ * page composition is written once.
+ */
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Hero from '@/sections/landing/Hero.astro';
+import Features from '@/sections/landing/Features.astro';
+import FinalCta from '@/sections/landing/FinalCta.astro';
+import { resolveLocale, useTranslations } from '@/i18n';
+
+const t = useTranslations(resolveLocale(Astro.currentLocale, Astro.url));
+---
+
+<BaseLayout title={t.meta.title} description={t.meta.description}>
+	<Hero />
+	<Features />
+	<FinalCta />
+</BaseLayout>

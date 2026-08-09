@@ -1,0 +1,53 @@
+---
+/**
+ * The one button in the system. Renders an `<a>` when given `href`, a
+ * `<button>` otherwise, so call sites never hand-roll link-styled buttons.
+ */
+import type { HTMLAttributes } from 'astro/types';
+
+type Variant = 'primary' | 'outline' | 'ghost';
+type Size = 'sm' | 'md' | 'lg';
+
+type Props = {
+	variant?: Variant;
+	size?: Size;
+	class?: string;
+} & (
+	| ({ href: string } & Omit<HTMLAttributes<'a'>, 'class'>)
+	| ({ href?: undefined } & Omit<HTMLAttributes<'button'>, 'class'>)
+);
+
+const { variant = 'primary', size = 'md', class: className, href, ...rest } = Astro.props;
+
+const base =
+	'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md font-medium transition-[transform,background-color,box-shadow] duration-150 disabled:pointer-events-none disabled:opacity-50 [&_svg]:size-4 [&_svg]:shrink-0';
+
+const variants: Record<Variant, string> = {
+	primary:
+		'border-2 border-border-strong bg-primary text-primary-foreground shadow-[var(--shadow-brut-sm)] hover:-translate-y-0.5 hover:shadow-[var(--shadow-brut)]',
+	outline:
+		'border-2 border-border-strong bg-background text-foreground hover:bg-accent hover:text-accent-foreground',
+	ghost: 'text-foreground hover:bg-accent hover:text-accent-foreground',
+};
+
+const sizes: Record<Size, string> = {
+	sm: 'h-8 px-3 text-xs',
+	md: 'h-9 px-4 text-sm',
+	lg: 'h-11 px-6 text-base',
+};
+
+const classes = [base, variants[variant], sizes[size], className];
+---
+
+{/* Rendered as two branches rather than a dynamic tag so each keeps its own attribute types. */}
+{
+	href ? (
+		<a class:list={classes} href={href} {...(rest as HTMLAttributes<'a'>)}>
+			<slot />
+		</a>
+	) : (
+		<button class:list={classes} {...(rest as HTMLAttributes<'button'>)}>
+			<slot />
+		</button>
+	)
+}

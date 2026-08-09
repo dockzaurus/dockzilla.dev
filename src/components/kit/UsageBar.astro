@@ -1,0 +1,30 @@
+---
+interface Props {
+	label: string;
+	value: number;
+	tone?: 'primary' | 'warning' | 'destructive';
+	class?: string;
+}
+
+const { label, value, tone = 'primary', class: className } = Astro.props;
+
+const fillColorMap: Record<'primary' | 'warning' | 'destructive', string> = {
+	primary: 'bg-primary',
+	warning: 'bg-warning',
+	destructive: 'bg-destructive',
+};
+---
+
+<div class:list={['space-y-1.5', className]}>
+	<div class="flex items-center justify-between text-xs">
+		<span class="font-medium text-muted-foreground">{label}</span>
+		<span class="font-mono tabular-nums">{value}%</span>
+	</div>
+	<div class="h-2 overflow-hidden rounded-full border border-border-strong bg-muted">
+		<span
+			data-usage-fill
+			class:list={['block h-full rounded-full', fillColorMap[tone]]}
+			style={`--usage-value: ${value}%`}
+		></span>
+	</div>
+</div>

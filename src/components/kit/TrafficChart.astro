@@ -1,0 +1,142 @@
+---
+/**
+ * Area chart rendered entirely at build time. Colours come from the theme
+ * tokens, so it follows dark mode without any JavaScript.
+ */
+import { buildSeries, ticks } from '@/lib/chart';
+import type { TrafficPoint } from '@/data/landing';
+import type { Locale } from '@/i18n';
+
+/** Keeps SVG ids unique if the chart is ever rendered more than once per page. */
+let instances = 0;
+
+interface Props {
+	data: readonly TrafficPoint[];
+	locale: Locale;
+	requestsLabel: string;
+	errorsLabel: string;
+	title: string;
+	class?: string;
+}
+
+const { data, locale, requestsLabel, errorsLabel, title, class: className } = Astro.props;
+
+const WIDTH = 640;
+const HEIGHT = 220;
+const PADDING = { top: 12, right: 8, bottom: 26, left: 46 };
+
+const requests = data.map((d) => d.requests);
+const errors = data.map((d) => d.errors);
+
+// Both series share one axis, as in the source design: errors stay a flat
+// baseline against request volume, which is the point being made.
+const max = Math.ceil(Math.max(...requests) / 10_000) * 10_000;
+
+const scale = { width: WIDTH, height: HEIGHT, padding: PADDING, max };
+const requestSeries = buildSeries(requests, scale);
+const errorSeries = buildSeries(errors, scale);
+
+const gridValues = ticks(max, 4);
+const plotHeight = HEIGHT - PADDING.top - PADDING.bottom;
+const yFor = (value: number) => PADDING.top + plotHeight - (value / max) * plotHeight;
+
+const compact = new Intl.NumberFormat(locale, { notation: 'compact', maximumFractionDigits: 0 });
+const full = new Intl.NumberFormat(locale);
+
+const peak = Math.max(...requests);
+const totalErrors = errors.reduce((sum, n) => sum + n, 0);
+const uid = `traffic-${(instances += 1)}`;
+const gradientId = `${uid}-fill`;
+const titleId = `${uid}-title`;
+const descId = `${uid}-desc`;
+---
+
+<figure class:list={['m-0', className]}>
+	<svg
+		viewBox={`0 0 ${WIDTH} ${HEIGHT}`}
+		class="h-auto w-full overflow-visible"
+		role="img"
+		aria-labelledby={`${titleId} ${descId}`}
+	>
+		<title id={titleId}>{title}</title>
+		<desc id={descId}>
+			{`${requestsLabel}: ${full.format(peak)} peak. ${errorsLabel}: ${full.format(totalErrors)} total.`}
+		</desc>
+
+		<defs>
+			<linearGradient id={gradientId} x1="0" y1="0" x2="0" y2="1">
+				<stop offset="0%" stop-color="var(--color-chart-1)" stop-opacity="0.55"></stop>
+				<stop offset="100%" stop-color="var(--color-chart-1)" stop-opacity="0.03"></stop>
+			</linearGradient>
+		</defs>
+
+		{
+			gridValues.map((value) => (
+				<g>
+					<line
+						x1={PADDING.left}
+						x2={WIDTH - PADDING.right}
+						y1={yFor(value)}
+						y2={yFor(value)}
+						stroke="var(--color-border)"
+						stroke-dasharray="3 3"
+						vector-effect="non-scaling-stroke"
+					/>
+					<text
+						x={PADDING.left - 8}
+						y={yFor(value)}
+						dy="0.32em"
+						text-anchor="end"
+						font-size="11"
+						fill="var(--color-muted-foreground)"
+					>
+						{compact.format(value)}
+					</text>
+				</g>
+			))
+		}
+
+		<path d={requestSeries.area} fill={`url(#${gradientId})`}></path>
+		<path
+			d={requestSeries.line}
+			fill="none"
+			stroke="var(--color-chart-1)"
+			stroke-width="2.5"
+			stroke-linecap="round"
+			vector-effect="non-scaling-stroke"></path>
+		<path
+			d={errorSeries.line}
+			fill="none"
+			stroke="var(--color-chart-4)"
+			stroke-width="2"
+			stroke-linecap="round"
+			vector-effect="non-scaling-stroke"></path>
+
+		{
+			data.map((point, index) =>
+				index % 3 === 0 ? (
+					<text
+						x={requestSeries.points[index]?.x}
+						y={HEIGHT - 8}
+						text-anchor="middle"
+						font-size="11"
+						fill="var(--color-muted-foreground)"
+					>
+						{point.t}
+					</text>
+				) : null,
+			)
+		}
+	</svg>
+
+	<figcaption class="mt-2 flex items-center gap-4 text-xs text-muted-foreground">
+		<span class="inline-flex items-center gap-1.5">
+			<span class="h-0.5 w-4 rounded-full bg-chart-1"></span>
+			{requestsLabel}
+		</span>
+		<span class="inline-flex items-center gap-1.5">
+			<span class="h-0.5 w-4 rounded-full bg-chart-4"></span>
+			{errorsLabel}
+		</span>
+	</figcaption>
+</figure>

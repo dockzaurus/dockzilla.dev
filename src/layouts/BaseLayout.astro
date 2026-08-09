@@ -1,0 +1,100 @@
+---
+/**
+ * The document shell shared by every page (landing today, blog next).
+ *
+ * Owns three things nothing else should duplicate: the `<head>`, the two
+ * behaviours that need JavaScript (theme persistence and scroll reveals), and
+ * the header/footer chrome. Pages supply content and metadata only.
+ */
+import { Font } from 'astro:assets';
+
+import Seo from '@/components/seo/Seo.astro';
+import Header from '@/components/layout/Header.astro';
+import Footer from '@/components/layout/Footer.astro';
+import { LOCALE_META, resolveLocale, useTranslations } from '@/i18n';
+import '@/styles/global.css';
+
+interface Props {
+	title: string;
+	description: string;
+	image?: string;
+	type?: 'website' | 'article';
+	noindex?: boolean;
+	/** Set to false on pages that provide their own chrome. */
+	chrome?: boolean;
+}
+
+const { title, description, image, type, noindex, chrome = true } = Astro.props;
+
+const locale = resolveLocale(Astro.currentLocale, Astro.url);
+const t = useTranslations(locale);
+---
+
+<!doctype html>
+<html lang={LOCALE_META[locale].htmlLang}>
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<meta name="generator" content={Astro.generator} />
+		<meta name="color-scheme" content="light dark" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<link rel="icon" href="/favicon.ico" sizes="32x32" />
+
+		<Font cssVariable="--font-space-grotesk" preload />
+		<Font cssVariable="--font-dm-sans" preload />
+		<Font cssVariable="--font-jetbrains-mono" />
+
+		<Seo locale={locale} title={title} description={description} image={image} type={type} noindex={noindex} />
+
+		{/* Applied before first paint so the theme never flashes. */}
+		<script is:inline>
+			(() => {
+				const KEY = 'dockzilla.theme';
+				let stored = null;
+				try {
+					stored = localStorage.getItem(KEY);
+				} catch {
+					/* storage blocked — fall back to the system preference */
+				}
+				const dark = stored ? stored === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches;
+				document.documentElement.classList.toggle('dark', dark);
+			})();
+		</script>
+
+		{/* Reveals are JS-driven; without it, show everything in its final state. */}
+		<noscript>
+			<style>
+				[data-reveal] {
+					opacity: 1;
+				}
+				[data-usage-fill] {
+					width: var(--usage-value);
+				}
+			</style>
+		</noscript>
+
+		<slot name="head" />
+	</head>
+
+	<body class="min-h-screen bg-background text-foreground antialiased">
+		<a
+			href="#main"
+			class="sr-only rounded-md border-2 border-border-strong bg-card px-4 py-2 font-medium focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50"
+		>
+			{t.common.skipToContent}
+		</a>
+
+		{chrome && <Header />}
+
+		<main id="main">
+			<slot />
+		</main>
+
+		{chrome && <Footer />}
+
+		<script>
+			import '@/scripts/reveal';
+			import '@/scripts/analytics';
+		</script>
+	</body>
+</html>

@@ -1,0 +1,30 @@
+---
+import type { ProjectStatus } from '@/data/landing';
+
+interface Props {
+	status: ProjectStatus;
+	label: string;
+	class?: string;
+}
+
+const { status, label, class: className } = Astro.props;
+
+const toneMap: Record<ProjectStatus, string> = {
+	running: 'bg-success/15 text-success border-success/40',
+	building: 'bg-warning/20 text-warning-foreground border-warning/50',
+	degraded: 'bg-warning/20 text-warning-foreground border-warning/50',
+};
+
+const pulseClass = status === 'running' ? 'pulse-dot' : status === 'building' ? 'animate-pulse' : '';
+---
+
+<span
+	class:list={[
+		'inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 text-xs font-medium',
+		toneMap[status],
+		className,
+	]}
+>
+	<span class:list={['size-1.5 rounded-full bg-current', pulseClass]}></span>
+	{label}
+</span>

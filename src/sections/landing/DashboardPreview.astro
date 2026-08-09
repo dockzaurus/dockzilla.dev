@@ -1,0 +1,61 @@
+---
+/**
+ * The faux browser window in the hero. Static by construction: the chart is an
+ * SVG computed at build time and the usage bars fill via CSS on reveal.
+ */
+import StatusPill from '@/components/kit/StatusPill.astro';
+import TrafficChart from '@/components/kit/TrafficChart.astro';
+import UsageBar from '@/components/kit/UsageBar.astro';
+import { PREVIEW_PROJECTS, TRAFFIC_SERIES } from '@/data/landing';
+import { SITE } from '@/data/site';
+import { resolveLocale, useTranslations } from '@/i18n';
+
+const locale = resolveLocale(Astro.currentLocale, Astro.url);
+const t = useTranslations(locale);
+---
+
+<div
+	data-reveal
+	data-reveal-distance="40"
+	data-reveal-delay="300"
+	class="surface-brut mt-14 -rotate-[0.6deg] overflow-hidden shadow-[var(--shadow-brut-lg)]"
+	role="img"
+	aria-label={t.landing.preview.label}
+>
+	<div class="flex items-center gap-2 border-b-2 border-border-strong bg-secondary/60 px-4 py-2" aria-hidden="true">
+		<span class="size-2.5 rounded-full bg-destructive"></span>
+		<span class="size-2.5 rounded-full bg-warning"></span>
+		<span class="size-2.5 rounded-full bg-primary"></span>
+		<span class="ml-3 font-mono text-xs text-muted-foreground">{SITE.domain}/app</span>
+	</div>
+
+	<div class="grid gap-5 p-5 lg:grid-cols-[1.6fr_1fr]">
+		<div>
+			<p class="font-display text-sm font-bold uppercase tracking-widest text-muted-foreground">
+				{t.landing.preview.trafficTitle}
+			</p>
+			<TrafficChart
+				data={TRAFFIC_SERIES}
+				locale={locale}
+				title={t.landing.preview.trafficTitle}
+				requestsLabel={t.landing.preview.requests}
+				errorsLabel={t.landing.preview.errors}
+				class="mt-2"
+			/>
+		</div>
+
+		<div class="space-y-3">
+			{
+				PREVIEW_PROJECTS.map((project) => (
+					<div class="surface-soft space-y-2 p-3">
+						<div class="flex items-center justify-between gap-2">
+							<span class="truncate font-medium">{project.name}</span>
+							<StatusPill status={project.status} label={t.status[project.status]} />
+						</div>
+						<UsageBar label={t.landing.preview.cpu} value={project.cpu} />
+					</div>
+				))
+			}
+		</div>
+	</div>
+</div>
