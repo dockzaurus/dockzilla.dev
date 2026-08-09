@@ -123,6 +123,14 @@
 		transparent 60%
 	);
 	--gradient-primary: linear-gradient(120deg, var(--primary), var(--primary-glow));
+
+	/*
+	 * Grid geometry as an alpha mask (opaque line, transparent cell). Shared by
+	 * `grid-paper`, which draws the lines, and `grid-beam`, which lights them —
+	 * one definition keeps the two pixel-aligned.
+	 */
+	--grid-pattern: linear-gradient(to right, #000 1px, transparent 1px),
+		linear-gradient(to bottom, #000 1px, transparent 1px);
 }
 
 .dark {
@@ -224,31 +232,63 @@
  * further down stops them.
  */
 
-@keyframes grid-drift {
+/*
+ * A light sweeping along the grid lines.
+ *
+ * `grid-beam` carries the grid pattern as a *mask* and does not move, so the
+ * lit pixels always line up with the grid drawn underneath. The `beam` inside
+ * it is what travels — it is only visible where the mask lets it through,
+ * which reads as the lines themselves lighting up.
+ */
+
+@keyframes beam-sweep {
+	from {
+		transform: translate3d(-120%, 0, 0);
+	}
 	to {
-		/* Exactly one 32px tile, so the loop is seamless. */
-		transform: translate3d(-32px, -32px, 0);
+		transform: translate3d(380%, 0, 0);
 	}
 }
 
-@utility grid-drift {
-	animation: grid-drift 24s linear infinite;
+@utility grid-beam {
+	-webkit-mask-image: var(--grid-pattern);
+	mask-image: var(--grid-pattern);
+	-webkit-mask-size: 32px 32px;
+	mask-size: 32px 32px;
+}
+
+@utility beam {
+	background-image: linear-gradient(
+		90deg,
+		transparent 0%,
+		color-mix(in oklab, var(--primary-glow) 55%, transparent) 40%,
+		var(--primary-glow) 50%,
+		color-mix(in oklab, var(--primary-glow) 55%, transparent) 60%,
+		transparent 100%
+	);
+	filter: blur(12px);
+	animation: beam-sweep 7s linear infinite;
 	will-change: transform;
 }
 
 @keyframes aurora-drift {
-	from {
-		transform: translate3d(-3%, 0, 0) scale(1.05);
+	0% {
+		transform: translate3d(-10%, -5%, 0) scale(1.1);
 	}
-	to {
-		transform: translate3d(5%, 2%, 0) scale(1.18);
+	50% {
+		transform: translate3d(12%, 7%, 0) scale(1.4);
+	}
+	100% {
+		transform: translate3d(-10%, -5%, 0) scale(1.1);
 	}
 }
 
 /** Animated counterpart to `hero-glow`, meant for a dedicated absolute layer. */
 @utility hero-aurora {
 	background-image: var(--gradient-hero);
-	animation: aurora-drift 20s ease-in-out infinite alternate;
+	/* The keyframes already return to their start, so no `alternate` — that
+	   would double the period and stall the motion. */
+	animation: aurora-drift 14s ease-in-out infinite;
 	will-change: transform;
 }
 
@@ -323,5 +363,10 @@
 
 	[data-usage-fill] {
 		width: var(--usage-value);
+	}
+
+	/* A frozen beam would read as a stray streak across the grid — drop it. */
+	.beam {
+		display: none;
 	}
 }
