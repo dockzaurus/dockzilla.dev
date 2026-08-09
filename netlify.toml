@@ -1,0 +1,17 @@
+# Deploys are driven by GitHub Actions (.github/workflows/ci.yml), which uploads a
+# prebuilt `dist/` with the Netlify CLI. Netlify itself never builds this site — the
+# settings below are the fallback for a manual `netlify deploy --build` from a laptop.
+
+[build]
+	command = "pnpm build"
+	publish = "dist"
+
+[build.environment]
+	NODE_VERSION = "24"
+
+# Astro fingerprints everything under /_astro/, so it can be cached forever.
+[[headers]]
+	for = "/_astro/*"
+
+	[headers.values]
+		Cache-Control = "public, max-age=31536000, immutable"
