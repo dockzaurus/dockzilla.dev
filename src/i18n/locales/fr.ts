@@ -9,7 +9,11 @@ export const fr: Dictionary = {
 		github: 'Étoiler sur GitHub',
 		skipToContent: 'Aller au contenu',
 		toggleTheme: 'Basculer le thème de couleur',
+		themeLight: 'Thème clair',
+		themeDark: 'Thème sombre',
 		language: 'Langue',
+		home: 'Accueil',
+		mainNav: 'Principale',
 	},
 
 	status: {
@@ -31,6 +35,57 @@ export const fr: Dictionary = {
 	nav: {
 		features: 'Fonctionnalités',
 		docs: 'Documentation',
+	},
+
+	notFound: {
+		meta: {
+			title: 'Page introuvable — Dockzilla',
+			description: 'Cette page n\'existe pas. Revenez à l\'accueil ou filez directement dans la documentation.',
+		},
+		title: 'Cette route n\'a jamais été déployée',
+		body: 'La page demandée est introuvable — elle a peut-être été déplacée, ou le lien est erroné. Vos serveurs, eux, vont bien.',
+		home: 'Retour à l\'accueil',
+		docs: 'Lire la documentation',
+	},
+
+	keymap: {
+		title: 'Raccourcis clavier',
+		intro:
+			'Des mouvements façon vim pour parcourir le site. Ils ne se déclenchent jamais pendant la saisie dans un champ, et vous pouvez les désactiver ci-dessous.',
+		trigger: 'Raccourcis clavier',
+		close: 'Fermer',
+		toggle: 'Activer les raccourcis clavier',
+		sections: {
+			motion: 'Déplacement',
+			jump: 'Aller à',
+			action: 'Actions',
+		},
+		bindings: {
+			scrollDown: 'Défiler vers le bas',
+			scrollUp: 'Défiler vers le haut',
+			halfPageDown: 'Une demi-page vers le bas',
+			halfPageUp: 'Une demi-page vers le haut',
+			goTop: 'Haut de la page',
+			goBottom: 'Bas de la page',
+			nextSection: 'Section suivante',
+			prevSection: 'Section précédente',
+			followLink: 'Étiqueter les liens visibles, puis saisir une étiquette pour la suivre',
+			goHome: 'Accueil',
+			goFeatures: 'Fonctionnalités',
+			goDocs: 'Documentation',
+			goRepo: 'Dépôt GitHub',
+			toggleTheme: 'Basculer entre clair et sombre',
+			showHelp: 'Afficher cette liste',
+		},
+		announce: {
+			enabled: 'Raccourcis clavier activés.',
+			disabled: 'Raccourcis clavier désactivés.',
+			top: 'Haut de la page.',
+			bottom: 'Bas de la page.',
+			section: 'Section : {name}.',
+			hints: 'Liens étiquetés. Saisissez une étiquette pour suivre le lien, ou appuyez sur Échap pour annuler.',
+			hintsEmpty: 'Aucun lien visible.',
+		},
 	},
 
 	landing: {

@@ -1,7 +1,8 @@
 ---
 /**
  * Light/dark switch. The initial class is set by the blocking script in
- * BaseLayout; this only handles clicks and persistence.
+ * BaseLayout; this only handles clicks, persistence and telling assistive tech
+ * what changed — the visual change alone is silent to a screen reader.
  */
 import { Icon } from 'astro-icon/components';
 
@@ -10,22 +11,36 @@ import { resolveLocale, useTranslations } from '@/i18n';
 const t = useTranslations(resolveLocale(Astro.currentLocale, Astro.url));
 ---
 
+{/*
+ * `aria-pressed` is filled in by the script below rather than here: the theme
+ * is decided in the browser, so any value rendered at build time would be a
+ * guess, and a wrong one is worse than none.
+ */}
 <button
 	type="button"
 	data-theme-toggle
+	data-theme-light={t.common.themeLight}
+	data-theme-dark={t.common.themeDark}
 	aria-label={t.common.toggleTheme}
 	class="grid size-9 place-items-center rounded-md border-2 border-border-strong bg-background text-foreground transition-colors hover:bg-accent hover:text-accent-foreground"
 >
-	<Icon name="lucide:sun" class="size-4 dark:hidden" />
-	<Icon name="lucide:moon" class="hidden size-4 dark:block" />
+	<Icon name="lucide:sun" class="size-4 dark:hidden" aria-hidden="true" />
+	<Icon name="lucide:moon" class="hidden size-4 dark:block" aria-hidden="true" />
 </button>
 
 <script>
+	import { announce } from '@/scripts/announce';
+
 	const KEY = 'dockzilla.theme';
 
 	for (const button of document.querySelectorAll<HTMLButtonElement>('[data-theme-toggle]')) {
+		button.setAttribute('aria-pressed', String(document.documentElement.classList.contains('dark')));
+
 		button.addEventListener('click', () => {
 			const dark = document.documentElement.classList.toggle('dark');
+			button.setAttribute('aria-pressed', String(dark));
+			announce((dark ? button.dataset.themeDark : button.dataset.themeLight) ?? '');
+
 			try {
 				localStorage.setItem(KEY, dark ? 'dark' : 'light');
 			} catch {

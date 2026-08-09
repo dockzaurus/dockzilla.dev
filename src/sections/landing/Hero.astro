@@ -10,7 +10,18 @@ const locale = resolveLocale(Astro.currentLocale, Astro.url);
 const t = useTranslations(locale);
 ---
 
-<section class="relative overflow-hidden border-b-2 border-border-strong">
+{/*
+ * `data-section` + `tabindex="-1"` make this a stop for the `{`/`}` motions,
+ * and `aria-labelledby` promotes it to a named region — the same jump list a
+ * screen reader already offers under "landmarks".
+ */}
+<section
+	id="hero"
+	data-section
+	tabindex="-1"
+	aria-labelledby="hero-title"
+	class="relative overflow-hidden border-b-2 border-border-strong focus:outline-none"
+>
 	{/* Drifting glow, the static grid over it, then a light running along the
 	   grid lines. The aurora is inset past the edges so its drift shows no seam. */}
 	<div class="hero-aurora absolute -inset-8" aria-hidden="true"></div>
@@ -29,6 +40,7 @@ const t = useTranslations(locale);
 		</p>
 
 		<h1
+			id="hero-title"
 			data-reveal
 			data-reveal-delay="80"
 			class="mt-6 max-w-3xl font-display text-4xl font-bold leading-[1.05] sm:text-6xl"
@@ -44,7 +56,7 @@ const t = useTranslations(locale);
 		<div data-reveal data-reveal-delay="240" class="mt-8 flex flex-wrap gap-3">
 			<Button href={SITE.app} size="lg" data-track="cta_clicked" data-track-location="hero">
 				{t.landing.ctaPrimary}
-				<Icon name="lucide:arrow-right" />
+				<Icon name="lucide:arrow-right" aria-hidden="true" />
 			</Button>
 			<Button
 				href={SITE.docs}

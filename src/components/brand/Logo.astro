@@ -1,20 +1,34 @@
 ---
 import { SITE } from '@/data/site';
 
+type Size = 'sm' | 'lg';
+
 interface Props {
 	/** Hide the wordmark, keeping only the mark. */
 	compact?: boolean;
+	/** `lg` is for standalone placement — a page's focal point rather than chrome. */
+	size?: Size;
 	class?: string;
 }
 
-const { compact = false, class: className } = Astro.props;
+const { compact = false, size = 'sm', class: className } = Astro.props;
+
+const scales: Record<Size, { root: string; mark: string; dot: string; word: string }> = {
+	sm: { root: 'gap-2', mark: 'size-8 rounded-md', dot: 'size-3 rounded-[2px]', word: 'text-lg' },
+	lg: { root: 'gap-4', mark: 'size-20 rounded-xl', dot: 'size-8 rounded-[5px]', word: 'text-4xl' },
+};
+
+const scale = scales[size];
 ---
 
-<span class:list={['group/logo inline-flex items-center gap-2', className]}>
+<span class:list={['group/logo inline-flex items-center', scale.root, className]}>
 	<span
-		class="grid size-8 shrink-0 place-items-center rounded-md border-2 border-border-strong bg-primary transition-transform duration-300 ease-out group-hover/logo:rotate-90"
+		class:list={[
+			'grid shrink-0 place-items-center border-2 border-border-strong bg-primary transition-transform duration-300 ease-out group-hover/logo:rotate-90',
+			scale.mark,
+		]}
 	>
-		<span class="block size-3 rounded-[2px] bg-primary-foreground"></span>
+		<span class:list={['block bg-primary-foreground', scale.dot]}></span>
 	</span>
-	{!compact && <span class="font-display text-lg font-bold tracking-tight">{SITE.name}</span>}
+	{!compact && <span class:list={['font-display font-bold tracking-tight', scale.word]}>{SITE.name}</span>}
 </span>

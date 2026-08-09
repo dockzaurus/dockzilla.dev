@@ -1,0 +1,66 @@
+---
+/**
+ * The 404 page. Locale routes are thin wrappers around this, exactly like
+ * `sections/landing/Landing.astro`, so the composition is written once.
+ *
+ * It keeps the header and footer: the most useful thing a dead link can offer
+ * is the navigation the visitor was looking for.
+ */
+import { Icon } from 'astro-icon/components';
+
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Button from '@/components/ui/Button.astro';
+import Logo from '@/components/brand/Logo.astro';
+import { SITE } from '@/data/site';
+import { localizePath, resolveLocale, useTranslations } from '@/i18n';
+
+const locale = resolveLocale(Astro.currentLocale, Astro.url);
+const t = useTranslations(locale);
+---
+
+<BaseLayout title={t.notFound.meta.title} description={t.notFound.meta.description} noindex>
+	<section
+		id="notfound"
+		data-section
+		tabindex="-1"
+		aria-labelledby="notfound-title"
+		class="relative flex min-h-[70vh] items-center overflow-hidden border-b-2 border-border-strong focus:outline-none"
+	>
+		{/* The hero's ambient treatment, so a dead link still lands somewhere that
+		   looks like the product. */}
+		<div class="hero-aurora absolute -inset-8" aria-hidden="true"></div>
+		<div class="grid-paper absolute inset-0 opacity-60" aria-hidden="true"></div>
+		<div class="grid-beam absolute inset-0 overflow-hidden" aria-hidden="true">
+			<div class="beam absolute -top-1/4 -bottom-1/4 w-1/3 rotate-12"></div>
+		</div>
+
+		<div data-reveal-group class="relative mx-auto w-full max-w-2xl px-4 py-20 text-center sm:py-28">
+			<div data-reveal class="flex justify-center">
+				<Logo compact size="lg" />
+			</div>
+
+			{/* Decorative, so the real heading below stays the page's `h1`. */}
+			<p data-reveal class="mt-8 font-display text-7xl font-bold leading-none sm:text-8xl" aria-hidden="true">
+				<span class="text-gradient">404</span>
+			</p>
+
+			<h1 id="notfound-title" data-reveal class="mt-6 font-display text-3xl font-bold sm:text-4xl">
+				{t.notFound.title}
+			</h1>
+
+			<p data-reveal class="mx-auto mt-4 max-w-md text-muted-foreground">
+				{t.notFound.body}
+			</p>
+
+			<div data-reveal class="mt-9 flex flex-wrap justify-center gap-3">
+				<Button href={localizePath('/', locale)} size="lg">
+					<Icon name="lucide:arrow-left" aria-hidden="true" />
+					{t.notFound.home}
+				</Button>
+				<Button href={SITE.docs} size="lg" variant="outline" rel="noopener">
+					{t.notFound.docs}
+				</Button>
+			</div>
+		</div>
+	</section>
+</BaseLayout>

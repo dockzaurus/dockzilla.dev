@@ -9,26 +9,38 @@ import { localizePath, resolveLocale, useTranslations } from '@/i18n';
 const locale = resolveLocale(Astro.currentLocale, Astro.url);
 const t = useTranslations(locale);
 const home = localizePath('/', locale);
+const isHome = Astro.url.pathname === home;
 
+/** `goto` names the jump these links answer to — see `src/scripts/vim.ts`. */
 const links = [
-	{ href: `${home}#features`, label: t.nav.features },
-	{ href: SITE.docs, label: t.nav.docs, external: true },
+	{ href: `${home}#features`, label: t.nav.features, goto: 'features' },
+	{ href: SITE.docs, label: t.nav.docs, goto: 'docs', external: true },
 ];
 ---
 
 <header class="sticky top-0 z-40 border-b-2 border-border-strong bg-background/85 backdrop-blur">
 	<div class="mx-auto flex max-w-6xl items-center gap-3 px-4 py-3">
-		<a href={home} aria-label={SITE.name}>
+		<a
+			href={home}
+			data-goto="home"
+			aria-label={`${SITE.name} — ${t.common.home}`}
+			aria-current={isHome ? 'page' : undefined}
+			class="rounded-md"
+		>
 			<Logo />
 		</a>
 
-		<nav aria-label="Main" class="ml-6 hidden items-center gap-5 text-sm font-medium text-muted-foreground md:flex">
+		<nav
+			aria-label={t.common.mainNav}
+			class="ml-6 hidden items-center gap-5 text-sm font-medium text-muted-foreground md:flex"
+		>
 			{
 				links.map((link) => (
 					<a
 						href={link.href}
+						data-goto={link.goto}
 						rel={link.external ? 'noopener' : undefined}
-						class="transition-colors hover:text-foreground"
+						class="rounded-sm transition-colors hover:text-foreground"
 					>
 						{link.label}
 					</a>

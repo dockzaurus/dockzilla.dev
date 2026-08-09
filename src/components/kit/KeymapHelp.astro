@@ -1,0 +1,88 @@
+---
+/**
+ * The keyboard shortcut sheet, and the runtime strings the engine speaks.
+ *
+ * Markup only — `src/scripts/vim.ts` opens, closes and wires it, the same way
+ * components elsewhere only declare `data-reveal` and let `reveal.ts` animate.
+ * A native `<dialog>` earns the focus trap, the inert background and Escape for
+ * free, so none of that is reimplemented here.
+ */
+import { Icon } from 'astro-icon/components';
+
+import { KEYMAP, KEYMAP_SECTION_IDS } from '@/data/keymap';
+import { resolveLocale, useTranslations } from '@/i18n';
+
+const t = useTranslations(resolveLocale(Astro.currentLocale, Astro.url));
+
+/**
+ * Announcements happen from a script, which cannot reach the dictionary — so
+ * the handful of strings it needs ride along as JSON. `<` is escaped because a
+ * literal `</script>` inside the payload would close this element early.
+ */
+const strings = JSON.stringify(t.keymap.announce).replace(/</g, '\\u003c');
+---
+
+{/*
+ * `m-auto` restores the centring a modal `<dialog>` gets from the UA stylesheet:
+ * Tailwind's preflight resets `margin` on every element, this one included.
+ */}
+<dialog
+	data-keymap-dialog
+	aria-labelledby="keymap-title"
+	class="m-auto max-h-[85vh] w-[min(46rem,calc(100vw-2rem))] rounded-lg border-2 border-border-strong bg-card p-0 text-card-foreground shadow-[var(--shadow-brut-lg)] backdrop:bg-[color-mix(in_oklab,var(--ink)_60%,transparent)]"
+>
+	<div class="max-h-[85vh] overflow-y-auto p-6">
+		<div class="flex items-start justify-between gap-4">
+			<h2 id="keymap-title" class="font-display text-xl font-bold">{t.keymap.title}</h2>
+			<button
+				type="button"
+				data-keymap-close
+				aria-label={t.keymap.close}
+				class="grid size-8 shrink-0 place-items-center rounded-md border-2 border-border-strong bg-background transition-colors hover:bg-accent hover:text-accent-foreground"
+			>
+				<Icon name="lucide:x" class="size-4" aria-hidden="true" />
+			</button>
+		</div>
+
+		<p class="mt-2 max-w-prose text-sm text-muted-foreground">{t.keymap.intro}</p>
+
+		<div class="mt-6 grid gap-6 sm:grid-cols-2">
+			{
+				KEYMAP_SECTION_IDS.map((section) => (
+					<section>
+						<h3 class="font-display text-xs font-bold uppercase tracking-widest text-muted-foreground">
+							{t.keymap.sections[section]}
+						</h3>
+						<dl class="mt-3 space-y-2">
+							{KEYMAP.filter((binding) => binding.section === section).map((binding) => (
+								<div class="flex items-baseline gap-3">
+									<dt class="flex shrink-0 gap-1">
+										{binding.sequence.map((key) => (
+											<kbd class="min-w-6 rounded-[4px] border-2 border-border-strong bg-background px-1.5 py-0.5 text-center font-mono text-xs font-semibold">
+												{key}
+											</kbd>
+										))}
+									</dt>
+									<dd class="text-sm text-muted-foreground">{t.keymap.bindings[binding.id]}</dd>
+								</div>
+							))}
+						</dl>
+					</section>
+				))
+			}
+		</div>
+
+		{/* WCAG 2.1.4 asks for a way off single-character shortcuts. This is it. */}
+		<label class="mt-6 flex items-center gap-2 border-t border-border pt-4 text-sm font-medium">
+			<input
+				type="checkbox"
+				data-keymap-enabled
+				checked
+				class="size-4 rounded-[3px] border-2 border-border-strong accent-primary"
+			/>
+			{t.keymap.toggle}
+		</label>
+	</div>
+</dialog>
+
+<script type="application/json" data-keymap-strings is:inline set:html={strings} />

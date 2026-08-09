@@ -75,6 +75,7 @@ export default defineConfig({
 		icon({
 			include: {
 				lucide: [
+					'arrow-left',
 					'arrow-right',
 					'boxes',
 					'database',
@@ -85,6 +86,8 @@ export default defineConfig({
 					'sun',
 					'moon',
 					'github',
+					'keyboard',
+					'x',
 				],
 			},
 		}),
