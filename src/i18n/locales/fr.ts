@@ -33,6 +33,17 @@ export const fr: Dictionary = {
 		docs: 'Documentation',
 	},
 
+	notFound: {
+		meta: {
+			title: 'Page introuvable — Dockzilla',
+			description: 'Cette page n\'existe pas. Revenez à l\'accueil ou filez directement dans la documentation.',
+		},
+		title: 'Cette route n\'a jamais été déployée',
+		body: 'La page demandée est introuvable — elle a peut-être été déplacée, ou le lien est erroné. Vos serveurs, eux, vont bien.',
+		home: 'Retour à l\'accueil',
+		docs: 'Lire la documentation',
+	},
+
 	landing: {
 		badge: 'Open source · auto-hébergé · à vous pour toujours',
 		titleLead: 'Déployez vos applications sur',
