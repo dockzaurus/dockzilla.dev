@@ -19,7 +19,13 @@ const t = useTranslations(locale);
 ---
 
 <BaseLayout title={t.notFound.meta.title} description={t.notFound.meta.description} noindex>
-	<section class="relative flex min-h-[70vh] items-center overflow-hidden border-b-2 border-border-strong">
+	<section
+		id="notfound"
+		data-section
+		tabindex="-1"
+		aria-labelledby="notfound-title"
+		class="relative flex min-h-[70vh] items-center overflow-hidden border-b-2 border-border-strong focus:outline-none"
+	>
 		{/* The hero's ambient treatment, so a dead link still lands somewhere that
 		   looks like the product. */}
 		<div class="hero-aurora absolute -inset-8" aria-hidden="true"></div>
@@ -38,7 +44,7 @@ const t = useTranslations(locale);
 				<span class="text-gradient">404</span>
 			</p>
 
-			<h1 data-reveal class="mt-6 font-display text-3xl font-bold sm:text-4xl">
+			<h1 id="notfound-title" data-reveal class="mt-6 font-display text-3xl font-bold sm:text-4xl">
 				{t.notFound.title}
 			</h1>
 
@@ -48,7 +54,7 @@ const t = useTranslations(locale);
 
 			<div data-reveal class="mt-9 flex flex-wrap justify-center gap-3">
 				<Button href={localizePath('/', locale)} size="lg">
-					<Icon name="lucide:arrow-left" />
+					<Icon name="lucide:arrow-left" aria-hidden="true" />
 					{t.notFound.home}
 				</Button>
 				<Button href={SITE.docs} size="lg" variant="outline" rel="noopener">

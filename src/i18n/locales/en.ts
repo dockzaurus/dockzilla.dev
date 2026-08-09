@@ -47,6 +47,17 @@ export const en = {
 		docs: 'Docs',
 	},
 
+	notFound: {
+		meta: {
+			title: 'Page not found — Dockzilla',
+			description: 'That page does not exist. Head back to the home page or jump straight into the docs.',
+		},
+		title: 'This route never deployed',
+		body: 'The page you asked for is not here — it may have moved, or the link may be wrong. Your servers are fine.',
+		home: 'Back to home',
+		docs: 'Read the docs',
+	},
+
 	/**
 	 * The vim-style keyboard layer. `bindings` is keyed by the id union from
 	 * `src/data/keymap.ts`, so adding a shortcut without describing it here is a
