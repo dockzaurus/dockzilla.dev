@@ -17,14 +17,17 @@ import '@/styles/global.css';
 interface Props {
 	title: string;
 	description: string;
+	/** Shorter variant for social cards; falls back to `description`. */
+	ogDescription?: string;
 	image?: string;
+	imageAlt?: string;
 	type?: 'website' | 'article';
 	noindex?: boolean;
 	/** Set to false on pages that provide their own chrome. */
 	chrome?: boolean;
 }
 
-const { title, description, image, type, noindex, chrome = true } = Astro.props;
+const { title, description, ogDescription, image, imageAlt, type, noindex, chrome = true } = Astro.props;
 
 const locale = resolveLocale(Astro.currentLocale, Astro.url);
 const t = useTranslations(locale);
@@ -37,14 +40,27 @@ const t = useTranslations(locale);
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<meta name="generator" content={Astro.generator} />
 		<meta name="color-scheme" content="light dark" />
+		{/* sRGB equivalents of the `--background` tokens in `global.css`. */}
+		<meta name="theme-color" media="(prefers-color-scheme: light)" content="#f8f9ee" />
+		<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0a140e" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<link rel="icon" href="/favicon.ico" sizes="32x32" />
+		<link rel="apple-touch-icon" href="/apple-touch-icon.png" />
 
 		<Font cssVariable="--font-space-grotesk" preload />
 		<Font cssVariable="--font-dm-sans" preload />
 		<Font cssVariable="--font-jetbrains-mono" />
 
-		<Seo locale={locale} title={title} description={description} image={image} type={type} noindex={noindex} />
+		<Seo
+			locale={locale}
+			title={title}
+			description={description}
+			ogDescription={ogDescription}
+			image={image}
+			imageAlt={imageAlt}
+			type={type}
+			noindex={noindex}
+		/>
 
 		{/* Applied before first paint so the theme never flashes. */}
 		<script is:inline>

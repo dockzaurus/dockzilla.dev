@@ -23,12 +23,18 @@ export const en = {
 		degraded: 'Degraded',
 	} satisfies Record<ProjectStatus, string>,
 
+	/**
+	 * Search-facing copy. `title` stays under ~60 characters and `description`
+	 * under ~155 so neither is truncated in a result page; `ogDescription` is the
+	 * shorter, punchier variant social cards get.
+	 */
 	meta: {
-		title: 'Dockzilla — Vercel-grade deploys on your own servers',
+		title: 'Dockzilla — Open-source self-hosted PaaS for your servers',
 		description:
-			'Dockzilla is an open-source self-hosting platform: git-driven deploys, one-click databases, automatic TLS and live logs on hardware you control.',
+			'Dockzilla is an open-source self-hosted PaaS: git-driven deploys, one-click databases, automatic TLS and live logs — on servers you own. Free forever.',
 		ogDescription:
-			'Git-driven deploys, one-click databases, automatic TLS and live logs on hardware you control.',
+			'Git push, get a URL. The open-source self-hosted PaaS: one-click databases, automatic TLS and live logs on servers you own.',
+		imageAlt: 'Dockzilla — the open-source self-hosted PaaS for git-driven deploys on your own servers.',
 	},
 
 	nav: {
@@ -38,51 +44,51 @@ export const en = {
 
 	landing: {
 		badge: 'Open source · self-hosted · yours forever',
-		titleLead: 'Ship your apps on',
+		titleLead: 'Deploy your apps on',
 		titleHighlight: 'your own servers',
 		subtitle:
-			'Dockzilla gives you a Vercel-grade deploy experience on hardware you control. Git push, get a URL, keep the bill.',
+			'Dockzilla is an open-source, self-hosted PaaS that gives you a Vercel-grade deploy experience on hardware you already own. Git push, get a URL, keep the bill.',
 		ctaPrimary: 'Deploy your first app',
 		ctaSecondary: 'Read the docs',
 
 		preview: {
-			label: 'Product preview',
+			label: 'The Dockzilla dashboard: a live traffic chart beside three deployed projects and their CPU usage.',
 			trafficTitle: 'Traffic',
 			requests: 'Requests',
 			errors: 'Errors',
 			cpu: 'CPU',
 		},
 
-		featuresTitle: 'Everything a platform team builds — already built',
+		featuresTitle: 'Everything a self-hosting platform needs — already built',
 		features: {
 			git: {
 				title: 'Git-driven deploys',
-				body: 'Push to a branch, get a preview URL. Zero-downtime swaps by default.',
+				body: 'Push to a branch, get a preview URL. Zero-downtime container swaps by default.',
 			},
 			db: {
 				title: 'One-click databases',
-				body: 'Postgres, MySQL, Redis and Mongo with scheduled backups baked in.',
+				body: 'Self-hosted Postgres, MySQL, Redis and MongoDB with scheduled backups baked in.',
 			},
 			domains: {
-				title: 'Domains & TLS',
-				body: 'Automatic certificates, wildcard support and instant DNS checks.',
+				title: 'Custom domains & automatic TLS',
+				body: 'Certificates issued and renewed for you, wildcard support and instant DNS checks.',
 			},
 			logs: {
 				title: 'Live logs & metrics',
-				body: 'Stream stdout, trace requests and watch CPU in real time.',
+				body: 'Stream stdout, trace requests and watch CPU in real time — no external APM needed.',
 			},
 			templates: {
-				title: 'Template marketplace',
-				body: 'Ninety-plus self-hostable apps, deployable in a single click.',
+				title: 'Self-hosted app templates',
+				body: 'Ninety-plus self-hostable apps, each deployable to your server in a single click.',
 			},
 			team: {
-				title: 'Teams & roles',
-				body: 'Granular permissions, audit trails and SSO for the whole crew.',
+				title: 'Teams, roles & SSO',
+				body: 'Granular permissions, audit trails and single sign-on for the whole crew.',
 			},
 		} satisfies Record<FeatureId, { title: string; body: string }>,
 
 		ctaTitle: 'Your servers. Your data. Your rules.',
-		ctaBody: 'Spin up the dashboard and move your first workload in under ten minutes.',
+		ctaBody: 'Start self-hosting today — spin up the dashboard and move your first workload in under ten minutes.',
 	},
 
 	footer: {
