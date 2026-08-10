@@ -34,6 +34,7 @@
 	--color-warning: var(--warning);
 	--color-warning-foreground: var(--warning-foreground);
 	--color-warning-strong: var(--warning-strong);
+	--color-warning-fill: var(--warning-fill);
 	--color-success: var(--success);
 	--color-success-foreground: var(--success-foreground);
 	--color-success-strong: var(--success-strong);
@@ -108,6 +109,18 @@
 	--success-strong: oklch(0.49 0.15 150);
 	--warning-strong: oklch(0.46 0.11 75);
 
+	/*
+	 * …with one exception at the other end. `--warning` is a fill against a dark
+	 * card, but as a solid on the *light* card it measures 1.8:1 against the
+	 * muted track it sits in — under the 3:1 SC 1.4.11 asks of a graphic
+	 * carrying meaning. `--warning-fill` is the amber for that job at 3.2:1;
+	 * the dark theme takes the brighter value back below.
+	 *
+	 * Darker than `--chart-4`, which answers the same question against the card
+	 * rather than against a track laid on top of it.
+	 */
+	--warning-fill: oklch(0.62 0.16 72);
+
 	--border: oklch(0.87 0.02 140);
 	--border-strong: oklch(0.22 0.03 155);
 	--input: oklch(0.88 0.02 140);
@@ -170,9 +183,10 @@
 	--success-strong: oklch(0.82 0.16 150);
 	--warning-strong: oklch(0.86 0.11 85);
 
-	/* Restores the brighter amber; the darkened light-theme value would be lost
+	/* Restores the brighter amber; the darkened light-theme values would be lost
 	   against the dark card. */
 	--chart-4: oklch(0.78 0.16 82);
+	--warning-fill: oklch(0.78 0.16 82);
 
 	--border: oklch(0.32 0.03 155);
 	--border-strong: oklch(0.08 0.01 155);

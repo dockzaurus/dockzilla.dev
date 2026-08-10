@@ -2,19 +2,26 @@
 interface Props {
 	label: string;
 	value: number;
-	tone?: 'primary' | 'warning' | 'destructive';
 	/** Holds the fill back, in ms, for a bar that arrives with something else. */
 	delay?: number;
 	class?: string;
 }
 
-const { label, value, tone = 'primary', delay, class: className } = Astro.props;
+const { label, value, delay, class: className } = Astro.props;
 
-const fillColorMap: Record<'primary' | 'warning' | 'destructive', string> = {
-	primary: 'bg-primary',
-	warning: 'bg-warning',
-	destructive: 'bg-destructive',
-};
+/** Percentages at which the fill changes band. */
+const WARNING_AT = 70;
+const CRITICAL_AT = 90;
+
+/*
+ * Fill-weight tokens: `bg-warning-fill` rather than `bg-warning`, which is
+ * tuned as a tint behind text and washes out to 1.8:1 as a solid on the light
+ * card. The `-strong` members are the text ones — see `StatusPill`.
+ *
+ * Colour is emphasis here, never the only cue: the percentage is printed above
+ * the bar and the fill width states the same thing a third time.
+ */
+const fill = value >= CRITICAL_AT ? 'bg-destructive' : value >= WARNING_AT ? 'bg-warning-fill' : 'bg-primary';
 ---
 
 <div class:list={['space-y-1.5', className]}>
@@ -26,7 +33,7 @@ const fillColorMap: Record<'primary' | 'warning' | 'destructive', string> = {
 		<span
 			data-usage-fill
 			data-reveal-delay={delay}
-			class:list={['block h-full rounded-full', fillColorMap[tone]]}
+			class:list={['block h-full rounded-full', fill]}
 			style={`--usage-value: ${value}%`}
 		></span>
 	</div>

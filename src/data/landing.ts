@@ -27,11 +27,16 @@ export type PreviewProject = {
 	cpu: number;
 };
 
-/** Illustrative dashboard content rendered inside the hero product shot. */
+/**
+ * Illustrative dashboard content rendered inside the hero product shot.
+ *
+ * One project per state, and one per CPU band — `UsageBar` colours its fill
+ * green, amber or red at 70% and 90%, and the shot is where that reads.
+ */
 export const PREVIEW_PROJECTS: readonly PreviewProject[] = [
 	{ name: 'atlas-web', status: 'running', cpu: 34 },
 	{ name: 'billing-api', status: 'building', cpu: 71 },
-	{ name: 'docs-site', status: 'running', cpu: 9 },
+	{ name: 'docs-site', status: 'degraded', cpu: 94 },
 ];
 
 export type TrafficPoint = { t: string; requests: number; errors: number };
