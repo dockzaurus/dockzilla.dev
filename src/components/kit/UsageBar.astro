@@ -3,10 +3,12 @@ interface Props {
 	label: string;
 	value: number;
 	tone?: 'primary' | 'warning' | 'destructive';
+	/** Holds the fill back, in ms, for a bar that arrives with something else. */
+	delay?: number;
 	class?: string;
 }
 
-const { label, value, tone = 'primary', class: className } = Astro.props;
+const { label, value, tone = 'primary', delay, class: className } = Astro.props;
 
 const fillColorMap: Record<'primary' | 'warning' | 'destructive', string> = {
 	primary: 'bg-primary',
@@ -23,6 +25,7 @@ const fillColorMap: Record<'primary' | 'warning' | 'destructive', string> = {
 	<div class="h-2 overflow-hidden rounded-full border border-border-strong bg-muted">
 		<span
 			data-usage-fill
+			data-reveal-delay={delay}
 			class:list={['block h-full rounded-full', fillColorMap[tone]]}
 			style={`--usage-value: ${value}%`}
 		></span>

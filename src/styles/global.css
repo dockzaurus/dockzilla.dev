@@ -433,6 +433,24 @@
 }
 
 /*
+ * Chart entrance. `data-chart-wipe` is the clip rect that sweeps the series in
+ * and `data-chart-dot` the marker that rides the line — both are positioned by
+ * `TrafficChart.astro`, which owns the geometry; only the states live here.
+ */
+[data-chart-grid],
+[data-chart-dot] {
+	opacity: 0;
+}
+
+[data-chart-wipe] {
+	transform: scaleX(0);
+}
+
+[data-chart-dot] {
+	offset-distance: 0%;
+}
+
+/*
  * Explicit finished state, set by the script once each animation resolves.
  * These rules come last on purpose: they must win over the hidden state above,
  * so a finished element stays visible no matter how the animation engine
@@ -444,6 +462,40 @@
 
 [data-usage-fill='in'] {
 	width: var(--usage-value);
+}
+
+[data-chart-grid='in'] {
+	opacity: 1;
+}
+
+[data-chart-wipe='in'] {
+	transform: none;
+}
+
+[data-chart-dot='in'] {
+	opacity: 1;
+	offset-distance: 100%;
+}
+
+/*
+ * The marker keeps breathing once it lands, the way a live reading does. Both
+ * circles are drawn at the group's local origin, so scaling about the viewBox
+ * origin scales about the marker's own centre.
+ */
+@keyframes chart-dot-pulse {
+	from {
+		transform: scale(1);
+		opacity: 0.5;
+	}
+	to {
+		transform: scale(3.2);
+		opacity: 0;
+	}
+}
+
+[data-chart-dot='in'] [data-chart-pulse] {
+	transform-origin: 0 0;
+	animation: chart-dot-pulse 2.2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -462,6 +514,20 @@
 
 	[data-usage-fill] {
 		width: var(--usage-value);
+	}
+
+	[data-chart-grid] {
+		opacity: 1;
+	}
+
+	[data-chart-wipe] {
+		transform: none;
+	}
+
+	/* Straight to the marker's resting place — the last reading on the line. */
+	[data-chart-dot] {
+		opacity: 1;
+		offset-distance: 100%;
 	}
 
 	/* A frozen beam would read as a stray streak across the grid — drop it. */

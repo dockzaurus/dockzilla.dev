@@ -1,7 +1,9 @@
 ---
 /**
  * The faux browser window in the hero. Static by construction: the chart is an
- * SVG computed at build time and the usage bars fill via CSS on reveal.
+ * SVG computed at build time, and everything that moves on reveal — the chart
+ * draw, the staggered project cards, the usage bars — is driven by attributes
+ * `src/scripts/reveal.ts` picks up.
  */
 import StatusPill from '@/components/kit/StatusPill.astro';
 import TrafficChart from '@/components/kit/TrafficChart.astro';
@@ -44,15 +46,17 @@ const t = useTranslations(locale);
 			/>
 		</div>
 
-		<div class="space-y-3">
+		{/* Held until the window itself has landed, then dealt out one by one. */}
+		<div class="space-y-3" data-reveal-group data-reveal-delay="700">
 			{
-				PREVIEW_PROJECTS.map((project) => (
-					<div class="surface-soft space-y-2 p-3">
+				PREVIEW_PROJECTS.map((project, index) => (
+					<div data-reveal data-reveal-distance="12" class="surface-soft space-y-2 p-3">
 						<div class="flex items-center justify-between gap-2">
 							<span class="truncate font-medium">{project.name}</span>
 							<StatusPill status={project.status} label={t.status[project.status]} />
 						</div>
-						<UsageBar label={t.landing.preview.cpu} value={project.cpu} />
+						{/* Each bar fills once its own card has arrived. */}
+						<UsageBar label={t.landing.preview.cpu} value={project.cpu} delay={900 + index * 70} />
 					</div>
 				))
 			}

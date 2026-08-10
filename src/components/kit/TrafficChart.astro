@@ -2,6 +2,10 @@
 /**
  * Area chart rendered entirely at build time. Colours come from the theme
  * tokens, so it follows dark mode without any JavaScript.
+ *
+ * Its entrance is declarative in the same way the rest of the site is: the
+ * markup only carries attributes (`data-chart`, `data-chart-grid`,
+ * `data-chart-wipe`, `data-chart-dot`) and `src/scripts/reveal.ts` drives them.
  */
 import { buildSeries, ticks } from '@/lib/chart';
 import type { TrafficPoint } from '@/data/landing';
@@ -47,12 +51,21 @@ const peak = Math.max(...requests);
 const totalErrors = errors.reduce((sum, n) => sum + n, 0);
 const uid = `traffic-${(instances += 1)}`;
 const gradientId = `${uid}-fill`;
+const wipeId = `${uid}-wipe`;
 const titleId = `${uid}-title`;
 const descId = `${uid}-desc`;
+
+// The sweep rect is the plot area with 2px of slack, so the stroke caps at
+// either end are never clipped mid-animation. Scaling it from `wipeStart`
+// keeps its leading edge in step with the marker running along the line.
+const wipeStart = PADDING.left - 2;
+const wipeWidth = WIDTH - PADDING.left - PADDING.right + 4;
+const lineEnd = requestSeries.points[requestSeries.points.length - 1];
 ---
 
 <figure class:list={['m-0', className]}>
 	<svg
+		data-chart
 		viewBox={`0 0 ${WIDTH} ${HEIGHT}`}
 		class="h-auto w-full overflow-visible"
 		role="img"
@@ -68,11 +81,24 @@ const descId = `${uid}-desc`;
 				<stop offset="0%" stop-color="var(--color-chart-1)" stop-opacity="0.55"></stop>
 				<stop offset="100%" stop-color="var(--color-chart-1)" stop-opacity="0.03"></stop>
 			</linearGradient>
+
+			{/* Scaled from 0 to 1 on reveal, which wipes the series in from the
+			    left. `transform-origin` is in viewBox units — the default
+			    `transform-box: view-box` puts its origin at 0,0. */}
+			<clipPath id={wipeId}>
+				<rect
+					data-chart-wipe
+					x={wipeStart}
+					y="0"
+					width={wipeWidth}
+					height={HEIGHT}
+					style={`transform-origin: ${wipeStart}px 0`}></rect>
+			</clipPath>
 		</defs>
 
 		{
 			gridValues.map((value) => (
-				<g>
+				<g data-chart-grid>
 					<line
 						x1={PADDING.left}
 						x2={WIDTH - PADDING.right}
@@ -96,29 +122,44 @@ const descId = `${uid}-desc`;
 			))
 		}
 
-		<path d={requestSeries.area} fill={`url(#${gradientId})`}></path>
-		<path
-			d={requestSeries.line}
-			fill="none"
-			stroke="var(--color-chart-1)"
-			stroke-width="2.5"
-			stroke-linecap="round"
-			vector-effect="non-scaling-stroke"></path>
-		{/* Dashed, so the two series stay apart for a viewer who cannot tell the
-		    green from the amber — colour is not the only difference. */}
-		<path
-			d={errorSeries.line}
-			fill="none"
-			stroke="var(--color-chart-4)"
-			stroke-width="2"
-			stroke-linecap="round"
-			stroke-dasharray="6 4"
-			vector-effect="non-scaling-stroke"></path>
+		<g clip-path={`url(#${wipeId})`}>
+			<path d={requestSeries.area} fill={`url(#${gradientId})`}></path>
+			<path
+				d={requestSeries.line}
+				fill="none"
+				stroke="var(--color-chart-1)"
+				stroke-width="2.5"
+				stroke-linecap="round"
+				vector-effect="non-scaling-stroke"></path>
+			{/* Dashed, so the two series stay apart for a viewer who cannot tell the
+			    green from the amber — colour is not the only difference. */}
+			<path
+				d={errorSeries.line}
+				fill="none"
+				stroke="var(--color-chart-4)"
+				stroke-width="2"
+				stroke-linecap="round"
+				stroke-dasharray="6 4"
+				vector-effect="non-scaling-stroke"></path>
+		</g>
+
+		{
+			/* Marker riding the request line, carried by `offset-path`. Both
+			   circles sit at the group's local origin, which is the point
+			   `offset-distance` moves. It comes to rest on the last reading. */
+			lineEnd && (
+				<g data-chart-dot style={`offset-path: path('${requestSeries.line}'); offset-rotate: 0deg`}>
+					<circle data-chart-pulse r="4" opacity="0.45" fill="var(--color-chart-1)" />
+					<circle r="3" fill="var(--color-chart-1)" stroke="var(--color-card)" stroke-width="1.5" />
+				</g>
+			)
+		}
 
 		{
 			data.map((point, index) =>
 				index % 3 === 0 ? (
 					<text
+						data-chart-grid
 						x={requestSeries.points[index]?.x}
 						y={HEIGHT - 8}
 						text-anchor="middle"
@@ -134,7 +175,12 @@ const descId = `${uid}-desc`;
 
 	{/* Swatches mirror the strokes, dash included, so the legend is readable the
 	    same way the plot is. */}
-	<figcaption class="mt-2 flex items-center gap-4 text-xs text-muted-foreground">
+	<figcaption
+		data-reveal
+		data-reveal-delay="1600"
+		data-reveal-distance="6"
+		class="mt-2 flex items-center gap-4 text-xs text-muted-foreground"
+	>
 		<span class="inline-flex items-center gap-1.5">
 			<span class="h-0.5 w-4 rounded-full bg-chart-1" aria-hidden="true"></span>
 			{requestsLabel}

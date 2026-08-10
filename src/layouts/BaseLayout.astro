@@ -78,14 +78,31 @@ const t = useTranslations(locale);
 			})();
 		</script>
 
-		{/* Reveals are JS-driven; without it, show everything in its final state. */}
+		{/*
+		  Reveals are JS-driven; without it, show everything in its final state.
+
+		  Every selector is qualified with `:root` to outrank the starting states
+		  in `global.css`. Astro emits that stylesheet *after* this block, so at
+		  equal specificity the hidden state would win and the page would render
+		  blank — the one failure this block exists to prevent.
+		*/}
 		<noscript>
 			<style>
-				[data-reveal] {
+				:root [data-reveal] {
 					opacity: 1;
 				}
-				[data-usage-fill] {
+				:root [data-usage-fill] {
 					width: var(--usage-value);
+				}
+				:root [data-chart-grid] {
+					opacity: 1;
+				}
+				:root [data-chart-wipe] {
+					transform: none;
+				}
+				:root [data-chart-dot] {
+					opacity: 1;
+					offset-distance: 100%;
 				}
 			</style>
 		</noscript>
