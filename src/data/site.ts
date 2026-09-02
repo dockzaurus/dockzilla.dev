@@ -3,7 +3,7 @@ export const SITE = {
 	name: 'Dockzilla',
 	domain: 'dockzilla.dev',
 	url: 'https://dockzilla.dev',
-	repo: 'https://github.com/dockzilla/dockzilla',
+	repo: 'https://github.com/dockzaurus/dockzilla',
 	docs: 'https://docs.dockzilla.dev',
 	/** Where the "sign in" / "get started" CTAs point. */
 	app: 'https://app.dockzilla.dev',
