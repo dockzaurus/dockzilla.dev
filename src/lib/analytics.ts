@@ -1,4 +1,8 @@
-import { PUBLIC_POSTHOG_HOST, PUBLIC_POSTHOG_KEY } from 'astro:env/client';
+import {
+	PUBLIC_POSTHOG_HOST,
+	PUBLIC_POSTHOG_KEY,
+	PUBLIC_POSTHOG_UI_HOST,
+} from 'astro:env/client';
 
 /**
  * Analytics facade.
@@ -54,7 +58,10 @@ const pending: Array<(posthog: PostHog) => void> = [];
 
 /**
  * Loads and initialises posthog-js once. The dynamic import keeps the SDK in a
- * chunk of its own that is only requested when analytics is actually on.
+ * chunk of its own, requested only when analytics is actually on; with no key
+ * the loader folds away to `Promise.resolve(null)` and the entry chunk carries
+ * no reference to it. Rollup still writes the orphaned chunk to `dist/_astro/`
+ * in that case — dead weight on disk, never fetched by the browser.
  */
 function load(): Promise<PostHog | null> {
 	// Checked against the inlined constant rather than `isEnabled()` so that,
@@ -68,6 +75,9 @@ function load(): Promise<PostHog | null> {
 		.then(({ default: posthog }) => {
 			posthog.init(PUBLIC_POSTHOG_KEY as string, {
 				api_host: PUBLIC_POSTHOG_HOST,
+				// `api_host` is a same-origin proxy path, so posthog-js can't infer where
+				// the PostHog app lives; without this, toolbar and in-app links break.
+				ui_host: PUBLIC_POSTHOG_UI_HOST,
 				// Only create person profiles for users we explicitly identify —
 				// anonymous marketing traffic stays aggregate.
 				person_profiles: 'identified_only',

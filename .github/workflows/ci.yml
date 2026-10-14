@@ -42,8 +42,9 @@ jobs:
         run: pnpm build
         env:
           # Analytics only ships from master, so preview traffic never lands in
-          # PostHog. Unset, `src/lib/analytics.ts` is a no-op and posthog-js is
-          # dropped from the bundle.
+          # PostHog. Unset, `src/lib/analytics.ts` is a no-op and the browser
+          # never requests posthog-js — the chunk is still emitted to `dist/`,
+          # but nothing references it.
           PUBLIC_POSTHOG_KEY: ${{ github.ref == 'refs/heads/master' && secrets.PUBLIC_POSTHOG_KEY || '' }}
 
       # Both deploy jobs ship this exact artifact — the bits that passed the checks

@@ -35,8 +35,18 @@ export default defineConfig({
 				context: 'client',
 				access: 'public',
 				optional: true,
-				// EU cloud by default — this is an EU project and it keeps data in-region.
-				default: 'https://eu.i.posthog.com',
+				// Same-origin proxy path, served by the rewrites in `netlify.toml`. The
+				// real regional host (US cloud) lives there, not here. `astro dev` does
+				// not apply those rewrites — see `.env.example`.
+				default: '/ingest',
+			}),
+			// Needed only because we proxy: it tells posthog-js where the real app
+			// lives so toolbar and in-app links don't resolve against dockzilla.dev.
+			PUBLIC_POSTHOG_UI_HOST: envField.string({
+				context: 'client',
+				access: 'public',
+				optional: true,
+				default: 'https://us.posthog.com',
 			}),
 		},
 	},
